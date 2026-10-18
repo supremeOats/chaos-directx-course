@@ -29,14 +29,12 @@ int main()
 
     if (!SUCCEEDED(hrFactory)) {
         std::cout << "Factory creation failed\n";
-        pFactory->Release();
-
         return 0;
     }
 
     std::cout << "Factory created\n";
 
-    IDXGIAdapter* pAdapter;
+    IDXGIAdapter* pAdapter = nullptr;
     for (UINT adapterIndex = 0; pFactory->EnumAdapters(adapterIndex, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++adapterIndex)
     {
         DXGI_ADAPTER_DESC adapterDesc;
@@ -44,7 +42,6 @@ int main()
         
         if (!SUCCEEDED(hrAdapter)) {
             std::cout << "Adapter " << adapterIndex << " creation failed\n";
-            pAdapter->Release();
             break;
         }
         
