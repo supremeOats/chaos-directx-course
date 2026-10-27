@@ -15,6 +15,9 @@ public:
     bool setUp();
 
 private:
+    bool initDevice();
+    bool initCommandManagers();
+
     ComPtr<ID3D12Device> device = nullptr;
     ComPtr<ID3D12CommandList> cmdList = nullptr;
     ComPtr<ID3D12CommandQueue> cmdQueue = nullptr;
@@ -23,7 +26,11 @@ private:
 
 bool D3DRendererContext::setUp()
 {
-    //Device
+    return initDevice() && initCommandManagers();
+}
+
+bool D3DRendererContext::initDevice()
+{
     HRESULT hr = D3D12CreateDevice(
         nullptr,    //the first adapter that is enumerated by IDXGIFactory1::EnumAdapters
         D3D_FEATURE_LEVEL_12_0,
@@ -37,9 +44,12 @@ bool D3DRendererContext::setUp()
     }
 
     std::cout << "Device created\n";
+}
 
+bool D3DRendererContext::initCommandManagers()
+{
     //Allocator
-    hr = device->CreateCommandAllocator(
+    HRESULT hr = device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         __uuidof(ID3D12CommandAllocator),
         (void**)(&cmdAlloc)
